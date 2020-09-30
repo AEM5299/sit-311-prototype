@@ -63,6 +63,7 @@ Device.deleteMany({}, async () => {
             addGpsDataToDevice(device3, device3_data)
         ]).then(() => {
             console.info('The high risk device is 2. Device 3 should not be classified as high risk');
+            process.exit();
         })
     });
 });

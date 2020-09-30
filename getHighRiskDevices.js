@@ -27,6 +27,7 @@ Device.findOne({deakin_id: sick_device}).then( async(doc, err) => {
                         console.log(`Device ${el.deakin_id} is classified as high risk`);
                     }
                 });
+                process.exit();
             });
         })
     }

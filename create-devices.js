@@ -6,9 +6,9 @@ mongoose.connect(
 );
 
 const lat = Math.random() * 180 - 90; //Random number from -90 to +90;
-const long = Math.random() * 360 - 180 // Random number from -180 to +180
+const long = Math.random() * 360 - 180; // Random number from -180 to +180
 
-const kmInLongitudeDegree = 111.320 * Math.cos(lat / 180.0 * Math.PI)
+const kmInLongitudeDegree = 111.320 * Math.cos(lat / 180.0 * Math.PI);
 const deltaLat = 0.0015 / 111.1;
 const deltaLong = 0.0015 / kmInLongitudeDegree;
 

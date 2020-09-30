@@ -8,9 +8,9 @@ mongoose.connect(
 const sick_device = 1;
 const high_risk_device = [];
 
-Device.findOne({deakin_id: sick_device}).then((doc, err) => {
+Device.findOne({deakin_id: sick_device}).then( async(doc, err) => {
     if(doc) {
-        doc.gps_data.forEach(({ lat, long }) => {
+        doc.gps_data.forEach(({ lat, long, time }) => {
             const kmInLongitudeDegree = 111.320 * Math.cos( lat / 180.0 * Math.PI)
             const deltaLat = 0.0015 / 111.1;
             const deltaLong = 0.0015 / kmInLongitudeDegree;
@@ -19,12 +19,14 @@ Device.findOne({deakin_id: sick_device}).then((doc, err) => {
             const maxLat = lat + deltaLat;
             const minLong = long - deltaLong;
             const maxLong = long + deltaLong;
-            console.log(minLat, maxLat, minLong, maxLong);
-            Device.find({ gps_data: {$elemMatch: { lat: { $gt: minLat, $lt: maxLat }, long: { $gt: minLong, $lt: maxLong } }}, _id: { $nin: [doc._id] } }).then((docs, err) => {
+            // console.log(minLat, maxLat, minLong, maxLong);
+            Device.find({ gps_data: {$elemMatch: { lat: { $gte: minLat, $lte: maxLat }, long: { $gte: minLong, $lte: maxLong }, time: { $gte: time - 1000 * 60 * 60 * 24 * 14 } }}, _id: { $nin: [doc._id] } }).then((docs, err) => {
                 docs.forEach(el => {
-                    if(!high_risk_device.find(elem => elem._id == el._id)) high_risk_device.push(el);
+                    if(!high_risk_device.find(elem => elem === el)) {
+                        high_risk_device.push(el);
+                        console.log(`Device ${el.deakin_id} is classified as high risk`);
+                    }
                 });
-                console.log(high_risk_device);
             });
         })
     }
